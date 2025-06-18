@@ -1,0 +1,221 @@
+public class HttpServletResponseAdapter implements javax.servlet.http.HttpServletResponse {
+
+    private final jakarta.servlet.http.HttpServletResponse jakartaResponse;
+
+    public HttpServletResponseAdapter(jakarta.servlet.http.HttpServletResponse jakartaResponse) {
+        this.jakartaResponse = jakartaResponse;
+    }
+
+    @Override
+    public void addCookie(javax.servlet.http.Cookie cookie) {
+        jakarta.servlet.http.Cookie jc = new jakarta.servlet.http.Cookie(cookie.getName(), cookie.getValue());
+        jc.setDomain(cookie.getDomain());
+        jc.setHttpOnly(cookie.isHttpOnly());
+        jc.setMaxAge(cookie.getMaxAge());
+        jc.setPath(cookie.getPath());
+        jc.setSecure(cookie.getSecure());
+        jc.setVersion(cookie.getVersion());
+        jakartaResponse.addCookie(jc);
+    }
+
+    @Override
+    public boolean containsHeader(String name) {
+        return jakartaResponse.containsHeader(name);
+    }
+
+    @Override
+    public String encodeURL(String url) {
+        return jakartaResponse.encodeURL(url);
+    }
+
+    @Override
+    public String encodeRedirectURL(String url) {
+        return jakartaResponse.encodeRedirectURL(url);
+    }
+
+    @Override
+    public String encodeUrl(String url) {
+        return jakartaResponse.encodeURL(url);
+    }
+
+    @Override
+    public String encodeRedirectUrl(String url) {
+        return jakartaResponse.encodeRedirectURL(url);
+    }
+
+    @Override
+    public void sendError(int sc, String msg) {
+        try {
+            jakartaResponse.sendError(sc, msg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendError(int sc) {
+        try {
+            jakartaResponse.sendError(sc);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendRedirect(String location) {
+        try {
+            jakartaResponse.sendRedirect(location);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setDateHeader(String name, long date) {
+        jakartaResponse.setDateHeader(name, date);
+    }
+
+    @Override
+    public void addDateHeader(String name, long date) {
+        jakartaResponse.addDateHeader(name, date);
+    }
+
+    @Override
+    public void setHeader(String name, String value) {
+        jakartaResponse.setHeader(name, value);
+    }
+
+    @Override
+    public void addHeader(String name, String value) {
+        jakartaResponse.addHeader(name, value);
+    }
+
+    @Override
+    public void setIntHeader(String name, int value) {
+        jakartaResponse.setIntHeader(name, value);
+    }
+
+    @Override
+    public void addIntHeader(String name, int value) {
+        jakartaResponse.addIntHeader(name, value);
+    }
+
+    @Override
+    public void setStatus(int sc) {
+        jakartaResponse.setStatus(sc);
+    }
+
+    @Override
+    public void setStatus(int sc, String sm) {
+        // Deprecated in both APIs — map to setStatus only.
+        jakartaResponse.setStatus(sc);
+    }
+
+    @Override
+    public int getStatus() {
+        return jakartaResponse.getStatus();
+    }
+
+    @Override
+    public String getHeader(String name) {
+        return jakartaResponse.getHeader(name);
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        return jakartaResponse.getHeaders(name);
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        return jakartaResponse.getHeaderNames();
+    }
+
+    @Override
+    public String getCharacterEncoding() {
+        return jakartaResponse.getCharacterEncoding();
+    }
+
+    @Override
+    public String getContentType() {
+        return jakartaResponse.getContentType();
+    }
+
+    @Override
+    public javax.servlet.ServletOutputStream getOutputStream() {
+        throw new UnsupportedOperationException("OutputStream adapter not implemented.");
+    }
+
+    @Override
+    public java.io.PrintWriter getWriter() {
+        try {
+            return jakartaResponse.getWriter();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setCharacterEncoding(String charset) {
+        jakartaResponse.setCharacterEncoding(charset);
+    }
+
+    @Override
+    public void setContentLength(int len) {
+        jakartaResponse.setContentLength(len);
+    }
+
+    @Override
+    public void setContentLengthLong(long len) {
+        jakartaResponse.setContentLengthLong(len);
+    }
+
+    @Override
+    public void setContentType(String type) {
+        jakartaResponse.setContentType(type);
+    }
+
+    @Override
+    public void setBufferSize(int size) {
+        jakartaResponse.setBufferSize(size);
+    }
+
+    @Override
+    public int getBufferSize() {
+        return jakartaResponse.getBufferSize();
+    }
+
+    @Override
+    public void flushBuffer() {
+        try {
+            jakartaResponse.flushBuffer();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void resetBuffer() {
+        jakartaResponse.resetBuffer();
+    }
+
+    @Override
+    public boolean isCommitted() {
+        return jakartaResponse.isCommitted();
+    }
+
+    @Override
+    public void reset() {
+        jakartaResponse.reset();
+    }
+
+    @Override
+    public void setLocale(Locale loc) {
+        jakartaResponse.setLocale(loc);
+    }
+
+    @Override
+    public Locale getLocale() {
+        return jakartaResponse.getLocale();
+    }
+}
