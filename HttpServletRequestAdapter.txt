@@ -337,4 +337,45 @@ public class HttpServletRequestAdapter implements javax.servlet.http.HttpServlet
     public DispatcherType getDispatcherType() {
         return jakartaRequest.getDispatcherType();
     }
+	
+	@Override
+	public boolean authenticate(javax.servlet.http.HttpServletResponse response) 
+        throws IOException, ServletException {
+    if (response instanceof HttpServletResponseAdapter) {
+        jakarta.servlet.http.HttpServletResponse jakartaResponse = 
+            ((HttpServletResponseAdapter) response).getJakartaResponse();
+        return jakartaRequest.authenticate(jakartaResponse);
+    } else {
+        throw new IllegalArgumentException("Response must be an instance of HttpServletResponseAdapter");
+    }
+	
+	@Override
+public javax.servlet.http.Part getPart(String name) throws IOException, ServletException {
+    jakarta.servlet.http.Part jakartaPart = jakartaRequest.getPart(name);
+    return new PartAdapter(jakartaPart); // You must create this adapter too.
+}
+	@Override
+public Collection<javax.servlet.http.Part> getParts() throws IOException, ServletException {
+    Collection<jakarta.servlet.http.Part> jakartaParts = jakartaRequest.getParts();
+    List<javax.servlet.http.Part> parts = new ArrayList<>();
+    for (jakarta.servlet.http.Part jakartaPart : jakartaParts) {
+        parts.add(new PartAdapter(jakartaPart)); // You must implement PartAdapter
+    }
+    return parts;
+}
+	@Override
+public void login(String username, String password) throws ServletException {
+    jakartaRequest.login(username, password);
+}
+@Override
+public void logout() throws ServletException {
+    jakartaRequest.logout();
+}
+
+@Override
+public <T extends javax.servlet.http.HttpUpgradeHandler> T upgrade(Class<T> httpUpgradeHandlerClass)
+        throws IOException, ServletException {
+    // Note: You'd likely need an adapter for the HttpUpgradeHandler too
+    throw new UnsupportedOperationException("Upgrade not implemented in adapter.");
+}
 }
