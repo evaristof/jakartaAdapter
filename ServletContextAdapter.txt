@@ -1,340 +1,285 @@
-public class HttpServletRequestAdapter implements javax.servlet.http.HttpServletRequest {
+import jakarta.servlet.ServletContext;
 
-    private final jakarta.servlet.http.HttpServletRequest jakartaRequest;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.Map;
+import java.util.Set;
 
-    public HttpServletRequestAdapter(jakarta.servlet.http.HttpServletRequest jakartaRequest) {
-        this.jakartaRequest = jakartaRequest;
-    }
+/**
+ * Adapter to bridge jakarta.servlet.ServletContext to javax.servlet.ServletContext
+ */
+public class ServletContextAdapter implements javax.servlet.ServletContext {
 
-    @Override
-    public String getAuthType() {
-        return jakartaRequest.getAuthType();
-    }
+    private final ServletContext jakartaContext;
 
-    @Override
-    public Cookie[] getCookies() {
-        jakarta.servlet.http.Cookie[] jakartaCookies = jakartaRequest.getCookies();
-        if (jakartaCookies == null) return null;
-        Cookie[] javaxCookies = new Cookie[jakartaCookies.length];
-        for (int i = 0; i < jakartaCookies.length; i++) {
-            jakarta.servlet.http.Cookie jc = jakartaCookies[i];
-            Cookie c = new Cookie(jc.getName(), jc.getValue());
-            c.setPath(jc.getPath());
-            c.setDomain(jc.getDomain());
-            c.setSecure(jc.getSecure());
-            c.setHttpOnly(jc.isHttpOnly());
-            c.setMaxAge(jc.getMaxAge());
-            javaxCookies[i] = c;
-        }
-        return javaxCookies;
-    }
-
-    @Override
-    public long getDateHeader(String name) {
-        return jakartaRequest.getDateHeader(name);
-    }
-
-    @Override
-    public String getHeader(String name) {
-        return jakartaRequest.getHeader(name);
-    }
-
-    @Override
-    public Enumeration<String> getHeaders(String name) {
-        return jakartaRequest.getHeaders(name);
-    }
-
-    @Override
-    public Enumeration<String> getHeaderNames() {
-        return jakartaRequest.getHeaderNames();
-    }
-
-    @Override
-    public int getIntHeader(String name) {
-        return jakartaRequest.getIntHeader(name);
-    }
-
-    @Override
-    public String getMethod() {
-        return jakartaRequest.getMethod();
-    }
-
-    @Override
-    public String getPathInfo() {
-        return jakartaRequest.getPathInfo();
-    }
-
-    @Override
-    public String getPathTranslated() {
-        return jakartaRequest.getPathTranslated();
+    public ServletContextAdapter(ServletContext jakartaContext) {
+        this.jakartaContext = jakartaContext;
     }
 
     @Override
     public String getContextPath() {
-        return jakartaRequest.getContextPath();
+        return jakartaContext.getContextPath();
     }
 
     @Override
-    public String getQueryString() {
-        return jakartaRequest.getQueryString();
+    public javax.servlet.ServletContext getContext(String uripath) {
+        // Cross-context not supported in Jakarta/Javax bridge
+        throw new UnsupportedOperationException("getContext not supported in adapter");
     }
 
     @Override
-    public String getRemoteUser() {
-        return jakartaRequest.getRemoteUser();
+    public int getMajorVersion() {
+        return jakartaContext.getMajorVersion();
     }
 
     @Override
-    public boolean isUserInRole(String role) {
-        return jakartaRequest.isUserInRole(role);
+    public int getMinorVersion() {
+        return jakartaContext.getMinorVersion();
     }
 
     @Override
-    public java.security.Principal getUserPrincipal() {
-        return jakartaRequest.getUserPrincipal();
+    public int getEffectiveMajorVersion() {
+        return jakartaContext.getEffectiveMajorVersion();
     }
 
     @Override
-    public String getRequestedSessionId() {
-        return jakartaRequest.getRequestedSessionId();
+    public int getEffectiveMinorVersion() {
+        return jakartaContext.getEffectiveMinorVersion();
     }
 
     @Override
-    public String getRequestURI() {
-        return jakartaRequest.getRequestURI();
+    public String getMimeType(String file) {
+        return jakartaContext.getMimeType(file);
     }
 
     @Override
-    public StringBuffer getRequestURL() {
-        return jakartaRequest.getRequestURL();
+    public Set<String> getResourcePaths(String path) {
+        return jakartaContext.getResourcePaths(path);
     }
 
     @Override
-    public String getServletPath() {
-        return jakartaRequest.getServletPath();
+    public URL getResource(String path) throws MalformedURLException {
+        return jakartaContext.getResource(path);
     }
 
     @Override
-    public javax.servlet.http.HttpSession getSession(boolean create) {
-        throw new UnsupportedOperationException("HttpSession adapter not implemented.");
-    }
-
-    @Override
-    public javax.servlet.http.HttpSession getSession() {
-        throw new UnsupportedOperationException("HttpSession adapter not implemented.");
-    }
-
-    @Override
-    public String changeSessionId() {
-        throw new UnsupportedOperationException("Session management not implemented.");
-    }
-
-    @Override
-    public boolean isRequestedSessionIdValid() {
-        return jakartaRequest.isRequestedSessionIdValid();
-    }
-
-    @Override
-    public boolean isRequestedSessionIdFromCookie() {
-        return jakartaRequest.isRequestedSessionIdFromCookie();
-    }
-
-    @Override
-    public boolean isRequestedSessionIdFromURL() {
-        return jakartaRequest.isRequestedSessionIdFromURL();
-    }
-
-    @Override
-    public boolean isRequestedSessionIdFromUrl() {
-        return jakartaRequest.isRequestedSessionIdFromUrl();
-    }
-
-    @Override
-    public Object getAttribute(String name) {
-        return jakartaRequest.getAttribute(name);
-    }
-
-    @Override
-    public Enumeration<String> getAttributeNames() {
-        return jakartaRequest.getAttributeNames();
-    }
-
-    @Override
-    public String getCharacterEncoding() {
-        return jakartaRequest.getCharacterEncoding();
-    }
-
-    @Override
-    public void setCharacterEncoding(String env) {
-        try {
-            jakartaRequest.setCharacterEncoding(env);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public int getContentLength() {
-        return jakartaRequest.getContentLength();
-    }
-
-    @Override
-    public long getContentLengthLong() {
-        return jakartaRequest.getContentLengthLong();
-    }
-
-    @Override
-    public String getContentType() {
-        return jakartaRequest.getContentType();
-    }
-
-    @Override
-    public ServletInputStream getInputStream() {
-        throw new UnsupportedOperationException("InputStream adapter not implemented.");
-    }
-
-    @Override
-    public String getParameter(String name) {
-        return jakartaRequest.getParameter(name);
-    }
-
-    @Override
-    public Enumeration<String> getParameterNames() {
-        return jakartaRequest.getParameterNames();
-    }
-
-    @Override
-    public String[] getParameterValues(String name) {
-        return jakartaRequest.getParameterValues(name);
-    }
-
-    @Override
-    public Map<String, String[]> getParameterMap() {
-        return jakartaRequest.getParameterMap();
-    }
-
-    @Override
-    public String getProtocol() {
-        return jakartaRequest.getProtocol();
-    }
-
-    @Override
-    public String getScheme() {
-        return jakartaRequest.getScheme();
-    }
-
-    @Override
-    public String getServerName() {
-        return jakartaRequest.getServerName();
-    }
-
-    @Override
-    public int getServerPort() {
-        return jakartaRequest.getServerPort();
-    }
-
-    @Override
-    public BufferedReader getReader() {
-        throw new UnsupportedOperationException("Reader adapter not implemented.");
-    }
-
-    @Override
-    public String getRemoteAddr() {
-        return jakartaRequest.getRemoteAddr();
-    }
-
-    @Override
-    public String getRemoteHost() {
-        return jakartaRequest.getRemoteHost();
-    }
-
-    @Override
-    public void setAttribute(String name, Object o) {
-        jakartaRequest.setAttribute(name, o);
-    }
-
-    @Override
-    public void removeAttribute(String name) {
-        jakartaRequest.removeAttribute(name);
-    }
-
-    @Override
-    public Locale getLocale() {
-        return jakartaRequest.getLocale();
-    }
-
-    @Override
-    public Enumeration<Locale> getLocales() {
-        return jakartaRequest.getLocales();
-    }
-
-    @Override
-    public boolean isSecure() {
-        return jakartaRequest.isSecure();
-    }
-
-    @Override
-    public RequestDispatcher getRequestDispatcher(String path) {
-        throw new UnsupportedOperationException("RequestDispatcher not implemented.");
+    public InputStream getResourceAsStream(String path) {
+        return jakartaContext.getResourceAsStream(path);
     }
 
     @Override
     public String getRealPath(String path) {
-        return jakartaRequest.getRealPath(path);
+        return jakartaContext.getRealPath(path);
     }
 
     @Override
-    public int getRemotePort() {
-        return jakartaRequest.getRemotePort();
+    public RequestDispatcher getRequestDispatcher(String path) {
+        // Cannot adapt jakarta RequestDispatcher to javax
+        throw new UnsupportedOperationException("getRequestDispatcher not supported in adapter");
     }
 
     @Override
-    public String getLocalName() {
-        return jakartaRequest.getLocalName();
+    public RequestDispatcher getNamedDispatcher(String name) {
+        throw new UnsupportedOperationException("getNamedDispatcher not supported in adapter");
     }
 
     @Override
-    public String getLocalAddr() {
-        return jakartaRequest.getLocalAddr();
+    public Servlet getServlet(String name) {
+        throw new UnsupportedOperationException("Deprecated getServlet not supported.");
     }
 
     @Override
-    public int getLocalPort() {
-        return jakartaRequest.getLocalPort();
+    public Enumeration<Servlet> getServlets() {
+        throw new UnsupportedOperationException("Deprecated getServlets not supported.");
     }
 
     @Override
-    public ServletContext getServletContext() {
-        return new ServletContextAdapter(jakartaRequest.getServletContext());
+    public Enumeration<String> getServletNames() {
+        throw new UnsupportedOperationException("Deprecated getServletNames not supported.");
     }
 
     @Override
-    public AsyncContext startAsync() {
-        throw new UnsupportedOperationException("AsyncContext not implemented.");
+    public void log(String msg) {
+        jakartaContext.log(msg);
     }
 
     @Override
-    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) {
-        throw new UnsupportedOperationException("AsyncContext not implemented.");
+    public void log(Exception exception, String msg) {
+        jakartaContext.log(msg, exception);
     }
 
     @Override
-    public boolean isAsyncStarted() {
-        return jakartaRequest.isAsyncStarted();
+    public void log(String message, Throwable throwable) {
+        jakartaContext.log(message, throwable);
     }
 
     @Override
-    public boolean isAsyncSupported() {
-        return jakartaRequest.isAsyncSupported();
+    public String getServerInfo() {
+        return jakartaContext.getServerInfo();
     }
 
     @Override
-    public AsyncContext getAsyncContext() {
-        throw new UnsupportedOperationException("AsyncContext not implemented.");
+    public String getInitParameter(String name) {
+        return jakartaContext.getInitParameter(name);
     }
 
     @Override
-    public DispatcherType getDispatcherType() {
-        return jakartaRequest.getDispatcherType();
+    public Enumeration<String> getInitParameterNames() {
+        return jakartaContext.getInitParameterNames();
+    }
+
+    @Override
+    public boolean setInitParameter(String name, String value) {
+        return jakartaContext.setInitParameter(name, value);
+    }
+
+    @Override
+    public Object getAttribute(String name) {
+        return jakartaContext.getAttribute(name);
+    }
+
+    @Override
+    public Enumeration<String> getAttributeNames() {
+        return jakartaContext.getAttributeNames();
+    }
+
+    @Override
+    public void setAttribute(String name, Object object) {
+        jakartaContext.setAttribute(name, object);
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+        jakartaContext.removeAttribute(name);
+    }
+
+    @Override
+    public String getServletContextName() {
+        return jakartaContext.getServletContextName();
+    }
+
+    @Override
+    public javax.servlet.descriptor.JspConfigDescriptor getJspConfigDescriptor() {
+        // Not supported in simple adapter
+        return null;
+    }
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return jakartaContext.getClassLoader();
+    }
+
+    @Override
+    public void declareRoles(String... roleNames) {
+        jakartaContext.declareRoles(roleNames);
+    }
+
+    @Override
+    public String getVirtualServerName() {
+        return jakartaContext.getVirtualServerName();
+    }
+
+    // Dynamic registration methods not implemented
+    @Override
+    public javax.servlet.ServletRegistration.Dynamic addServlet(String servletName, String className) {
+        throw new UnsupportedOperationException("Dynamic servlet registration not supported.");
+    }
+
+    @Override
+    public javax.servlet.ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet) {
+        throw new UnsupportedOperationException("Dynamic servlet registration not supported.");
+    }
+
+    @Override
+    public javax.servlet.ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass) {
+        throw new UnsupportedOperationException("Dynamic servlet registration not supported.");
+    }
+
+    @Override
+    public <T extends Servlet> T createServlet(Class<T> clazz) {
+        throw new UnsupportedOperationException("Dynamic servlet creation not supported.");
+    }
+
+    @Override
+    public javax.servlet.ServletRegistration getServletRegistration(String servletName) {
+        throw new UnsupportedOperationException("Dynamic servlet registration not supported.");
+    }
+
+    @Override
+    public Map<String, ? extends javax.servlet.ServletRegistration> getServletRegistrations() {
+        throw new UnsupportedOperationException("Dynamic servlet registration not supported.");
+    }
+
+    @Override
+    public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className) {
+        throw new UnsupportedOperationException("Dynamic filter registration not supported.");
+    }
+
+    @Override
+    public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
+        throw new UnsupportedOperationException("Dynamic filter registration not supported.");
+    }
+
+    @Override
+    public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass) {
+        throw new UnsupportedOperationException("Dynamic filter registration not supported.");
+    }
+
+    @Override
+    public <T extends Filter> T createFilter(Class<T> clazz) {
+        throw new UnsupportedOperationException("Dynamic filter creation not supported.");
+    }
+
+    @Override
+    public javax.servlet.FilterRegistration getFilterRegistration(String filterName) {
+        throw new UnsupportedOperationException("Dynamic filter registration not supported.");
+    }
+
+    @Override
+    public Map<String, ? extends javax.servlet.FilterRegistration> getFilterRegistrations() {
+        throw new UnsupportedOperationException("Dynamic filter registration not supported.");
+    }
+
+    @Override
+    public SessionCookieConfig getSessionCookieConfig() {
+        throw new UnsupportedOperationException("SessionCookieConfig not supported.");
+    }
+
+    @Override
+    public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
+        throw new UnsupportedOperationException("Session tracking modes not supported.");
+    }
+
+    @Override
+    public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
+        throw new UnsupportedOperationException("Session tracking modes not supported.");
+    }
+
+    @Override
+    public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
+        throw new UnsupportedOperationException("Session tracking modes not supported.");
+    }
+
+    @Override
+    public void addListener(String className) {
+        throw new UnsupportedOperationException("Dynamic listener registration not supported.");
+    }
+
+    @Override
+    public <T extends EventListener> void addListener(T t) {
+        throw new UnsupportedOperationException("Dynamic listener registration not supported.");
+    }
+
+    @Override
+    public void addListener(Class<? extends EventListener> listenerClass) {
+        throw new UnsupportedOperationException("Dynamic listener registration not supported.");
+    }
+
+    @Override
+    public <T extends EventListener> T createListener(Class<T> clazz) {
+        throw new UnsupportedOperationException("Dynamic listener creation not supported.");
     }
 }
